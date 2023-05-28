@@ -20,5 +20,8 @@
     "webpack": "^5.84.1",
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^4.15.0"
+  },
+  "dependencies": {
+    "lil-gui": "^0.18.1"
   }
 }

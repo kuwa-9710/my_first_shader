@@ -1,9 +1,32 @@
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 modelMatrix;
+uniform vec2 uFrequency;
+uniform float uTime;
 
-attribute vec3 position;
+// uv座標の取得
+varying vec2 vUv;
+varying float vElevation;
 
 void main() {
-    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
+    vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+
+    // 波の形状を定義
+    // modelPosition.z += sin(modelPosition.x * uFrequency.x + uTime) * 0.1;
+    // modelPosition.z += sin(modelPosition.y * uFrequency.y + uTime) * 0.1;
+
+    // 影をつけた波の表現
+    float elevation =  sin(modelPosition.x * uFrequency.x + uTime) * 0.1;
+    elevation += sin(modelPosition.y * uFrequency.y + uTime) * 0.1;
+
+    modelPosition.z = elevation;
+
+    // Shaderのサイズを変更する
+    modelPosition.y *= 0.6;
+
+    vec4 viewPosition = viewMatrix * modelPosition;
+    vec4 projectionPosition = projectionMatrix * viewPosition;
+    gl_Position = projectionPosition;
+    // gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
+
+    // uv座標の取得
+    vUv = uv;
+    vElevation = elevation;
 }
